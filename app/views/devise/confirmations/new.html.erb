@@ -1,0 +1,34 @@
+<div class="ui centered grid">
+  <div class="row"></div>
+  <div class="row">
+    <div class="four wide column">
+      <h2 class="ui teal image header">
+        <div class="content">Resend confirmation instructions</div>
+      </h2>
+
+      <% if resource.errors.present? %>
+          <div class="ui error message">
+            <% resource.errors.full_messages.each do |msg| %>
+                <div class="item"> <%= msg %> </div>
+            <% end %>
+          </div>
+      <% end %>
+
+      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "ui large form" }) do |f| %>
+        <div class="ui stacked segment">
+          <div class="field">
+            <%= f.label :email %><br />
+            <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+          </div>
+
+          <div class="actions">
+            <%= f.submit "Resend confirmation instructions", class: "ui teal button" %>
+          </div>
+
+          <%= render "devise/shared/links" %>
+
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
