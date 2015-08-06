@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(users_params)
+    @user = User.new(users_params.merge(token: User.generate_token))
     if @user.save
       render status: 200, json: { message: success_message }
     else

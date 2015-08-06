@@ -16,6 +16,7 @@ gem "doorkeeper"
 gem 'omniauth-twitter'
 gem "letter_opener", group: :development
 gem 'semantic-ui-sass', github: 'doabit/semantic-ui-sass'
+gem "bunny", ">= 2.0.0"
 
 group :development, :test do
   gem 'byebug'
