@@ -10,10 +10,14 @@ class UsersController < ApplicationController
     respond_with @user.as_json
   end
 
+  def user_info
+    @user = User.where(token: params[:token]).first
+    respond_with @user.as_json
+  end
+
   def update
     @user = find_user
     if @user.update_attributes(users_params)
-      Publisher.publish(@user.id)
       render status: 200, json: { message: success_message }
     else
       render status: 422, json: { errors: @user.errors }
@@ -23,7 +27,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new(users_params.merge(token: User.generate_token))
     if @user.save
-      Publisher.publish(@user.id)
       render status: 200, json: { message: success_message }
     else
       render status: 422, json: { errors: @user.errors }

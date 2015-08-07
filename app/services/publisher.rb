@@ -2,8 +2,8 @@ class Publisher
 
   class << self
     def publish(message = '')
-      ch = channel.fanout("user.changed")
-      ch.publish(message)
+      channel = channel.fanout("user.changed")
+      channel.publish(message, persistent: true)
     end
 
     def channel

@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
 
   validates :first_name, :last_name, presence: true, unless: :twitter_login
 
+  after_commit :publish_event, on: [:create, :update]
+
   TEMP_EMAIL_PREFIX = 'change@me'
 
   class << self
@@ -46,5 +48,9 @@ class User < ActiveRecord::Base
     def generate_token
       Digest::SHA1.hexdigest([Time.now, rand].join)
     end
+  end
+
+  def publish_event
+    Publisher.publish(token)
   end
 end
