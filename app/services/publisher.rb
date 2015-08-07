@@ -1,16 +1,20 @@
 class Publisher
-  def self.publish(exchange, message = {})
-    x = channel.fanout("")
-    x.publish(message.to_json)
-  end
 
-  def self.channel
-    @channel ||= connection.create_channel
-  end
+  class << self
+    def publish(message = '')
+      ch = channel.fanout("user.changed")
+      ch.publish(message)
+    end
 
-  def self.connection
-    @connection ||= Bunny.new.tap do |c|
-      c.start
+    def channel
+      @channel ||= connection.create_channel
+    end
+
+    def connection
+      @connection ||= Bunny.new.tap do |c|
+        c.start
+      end
     end
   end
+
 end
