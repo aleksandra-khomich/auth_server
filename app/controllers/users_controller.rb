@@ -1,12 +1,13 @@
 class UsersController < ApplicationController
   respond_to :json
 
+  before_action :find_user, only: [:me, :update]
+
   def login_with_twitter
     redirect_to user_omniauth_authorize_path(:twitter)
   end
 
   def me
-    @user = find_user
     respond_with @user.as_json
   end
 
@@ -16,7 +17,8 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = find_user
+    users_params.delete(:password) unless users_params[:password].present?
+    binding.pry
     if @user.update_attributes(users_params)
       render status: 200, json: { message: success_message }
     else
@@ -50,6 +52,6 @@ class UsersController < ApplicationController
   end
 
   def find_user
-    doorkeeper_token.nil? ? User.where(twitter_token: params[:token]).first : User.find(doorkeeper_token.resource_owner_id)
+    @user = doorkeeper_token.nil? ? User.where(token: params[:token]).first : User.find(doorkeeper_token.resource_owner_id)
   end
 end
