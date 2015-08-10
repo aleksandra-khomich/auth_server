@@ -11,14 +11,8 @@ class UsersController < ApplicationController
     respond_with @user.as_json
   end
 
-  def user_info
-    @user = User.where(token: params[:token]).first
-    respond_with @user.as_json
-  end
-
   def update
     users_params.delete(:password) unless users_params[:password].present?
-    binding.pry
     if @user.update_attributes(users_params)
       render status: 200, json: { message: success_message }
     else
